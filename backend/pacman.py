@@ -10,7 +10,7 @@ xpfffffffffffxxfffffffffcffx/
 xfxxxxfxxxxxfxxfxxxxxfxxxxfx/
 xfxxxxfxxxxxfxxfxxxxxfxxxxfx/
 xfxxxxfxxxxxfxxfxxxxxfxxxxfx/
-xfffiffffpfffffffffffffffffx/
+xfffiffffnfffffffffffffffffx/
 xfxxxxfxxfxxxxxxxxfxxfxxxxfx/
 xfxxxxfxxfxxxxxxxxfxxfxxxxfx/
 xffffffxxffffxxffffxxffbfffx/
@@ -28,13 +28,13 @@ class Pacman:
 
     # Attempt to move the piece. Return false if not allowed. 
     def make_move(self, index_from: int, index_to: int) -> bool:
-        if index_from < 0 or self.size <= index_from or 0 < index_to or self.size <= index_to: 
+        if index_from < 0 or self.size <= index_from or index_to < 0 or self.size <= index_to: 
             return False  
 
-        board = list(board)
+        board = list(self.board)
         piece = board[index_from]
         food = board[index_to]
-        if not re.match(r"[pbnic][f ]", re.I): return False
+        if not re.match(r"[pbnic][f ]", piece + food, re.I): return False
 
         board[index_from] = "f" if piece.isupper() else " "
         board[index_to] = piece.upper() if food == "f" else piece.lower()
@@ -47,7 +47,7 @@ class Pacman:
         board = self.board
         piece_index = board.find(piece)
         if piece_index == -1: return
-        directions = self.directions
+        directions = self.directions.copy()
         shuffle(directions)
 
         for direction in directions:
@@ -62,10 +62,20 @@ class Pacman:
     # Attempt to make a player move, and return true if successful
     def player_action(self, direction) -> bool:
         direction_index = "ESWN".find(direction)
-        if direction_index == -1: return False
-
         player_index = self.board.find("p")
-        offset = self.directions[direction_index]
+        if direction_index == -1 or player_index == -1: return False
 
-        return self.make_move(player_index, player_index + offset)
+        print(self.directions[direction_index])
+
+        board = list(self.board)
+        landing_index = player_index + self.directions[direction_index]
+        food = board[landing_index]
+        if food not in "f ": return False
+
+        board[player_index] = " "
+        board[landing_index] = "p"
+        self.board = "".join(board)
+
+        self.ghost_actions()
+        return True
 

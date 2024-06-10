@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { cn } from "./utils/cn";
 import { useWebSocket } from "./hooks/useWebSocket";
 
@@ -55,11 +54,11 @@ function Square({ value }: { value: string }) {
       )}
     >
       {value === "f" && <div className="size-2 rounded-full bg-white"></div>}
-      {value === "P" && <Pacman />}
-      {value === "b" && <Ghost color="bg-red-500" />}
-      {value === "p" && <Ghost color="bg-pink-500" />}
-      {value === "i" && <Ghost color="bg-cyan-500" />}
-      {value === "c" && <Ghost color="bg-orange-500" />}
+      {value === "p" && <Pacman />}
+      {"bB".includes(value) && <Ghost color="bg-red-500" />}
+      {"nN".includes(value) && <Ghost color="bg-pink-500" />}
+      {"iI".includes(value) && <Ghost color="bg-cyan-500" />}
+      {"cC".includes(value) && <Ghost color="bg-orange-500" />}
     </div>
   );
 }
