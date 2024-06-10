@@ -1,25 +1,23 @@
-import { useEffect, useState } from "react"
-
-
+import { useEffect, useState } from "react";
 
 export function useWebSocket() {
-    const [ws, setWs] = useState<WebSocket | null>(null)
-    const [message, setMessage] = useState("")
-    const [fresh, setFresh] = useState(true)
+  const [ws, setWs] = useState<WebSocket | null>(null);
+  const [message, setMessage] = useState("");
+  const [fresh, setFresh] = useState(true);
 
-    useEffect(() => {
-        const socket = new WebSocket("ws://localhost:8000/ws")
+  useEffect(() => {
+    const socket = new WebSocket("ws://localhost:8000/ws");
 
-        socket.onopen = () => setWs(socket)
-        socket.onmessage = event => setMessage(event.data)
+    socket.onopen = () => setWs(socket);
+    socket.onmessage = (event) => setMessage(event.data);
+    socket.onclose = () => setWs(null);
 
+    return () => {
+      socket.close();
+    };
+  }, [fresh]);
 
-        return () => {
-            socket.close()
-        }
-    }, [fresh])
+  const refresh = () => setFresh(!fresh);
 
-    const refresh = () => setFresh(!fresh)
-
-    return { ws, message, refresh}
+  return { ws, message, refresh };
 }

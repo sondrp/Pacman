@@ -1,5 +1,6 @@
 import re
 from typing import Dict, Set
+from random import shuffle
 
 # The game itself. For now, make it simple by being turn based.
 # The player makes a move, and the pieces respond. The bots make random moves to start.
@@ -18,24 +19,53 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxx/
 """)
 
 actions: Dict[str, Set[str]] = {
-    'E': (r"P[^x]", r" P"),
-    'W': (r"[^x]P", r"P "),
-    'S': (r"P(.{28})[^x]", r" \1P"),
-    'N': (r"[^x](.{28})P", r"P\1 "),
+    'E': (r"[^x]", r" "),
+    'S': (r"(.{28})[^x]", r" \1"),
+    'W': (r"[^x]", r" "),
+    'N': (r"[^x](.{28})", r"\1 "),
 }
+
+def make_pattern(piece: str, direction: str):
+    if direction not in actions.keys(): return None, None
+
+    forward = direction == "E" or direction == "S"
+    pattern, repl = actions.get(direction)
+
+    if forward:
+        return fr"{piece}{pattern}", fr"{repl}{piece}"
+    else:
+        return fr"{pattern}{piece}", fr"{piece}{repl}"
+
 
 class Pacman:
     board = BOARD
 
-    # Player inputs a direction to go in, and the game updates state accordingly.
-    # For now, we are very forgiving. Illegal moves will not update the ghosts.
     def player_action(self, direction) -> bool:
-        action = actions.get(direction)
-        if not action: 
+        pattern, repl = make_pattern("P", direction)
+        if not pattern:
             return False
-        
-        pattern, repl = action
+
         self.board = re.sub(pattern, repl, self.board)
+        self.ghost_action()
+
         return True
+
+    # Make a random move for each of the ghosts
+    def ghost_action(self) -> bool:
+        board = self.board
+        ghosts = ["b", "p", "i", "c"]
+        directions = ["N", "E", "S", "W"]
+        shuffle(directions)
+        shuffle(ghosts)
+
+
+        for ghost in ghosts:
+            for direction in directions:
+                pattern, repl = make_pattern(ghost, direction)
+                if not re.search(pattern, board): continue
+                board = re.sub(pattern, repl, board)
+                break
+
+        self.board = board
 
 
