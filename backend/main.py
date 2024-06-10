@@ -33,6 +33,7 @@ class ConnectionManager:
 
     async def player_action(self, direction):
         if self.pacman.player_action(direction):
+            self.pacman.random_all_ghosts()
             await self.broadcast()
 
     async def broadcast(self):

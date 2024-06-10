@@ -53,7 +53,7 @@ function Square({ value }: { value: string }) {
         value === "x" && "bg-black",
       )}
     >
-      {value === "f" && <div className="size-2 rounded-full bg-white"></div>}
+      {value === "D" && <div className="size-2 rounded-full bg-white"></div>}
       {value === "p" && <Pacman />}
       {"bB".includes(value) && <Ghost color="bg-red-500" />}
       {"nN".includes(value) && <Ghost color="bg-pink-500" />}
