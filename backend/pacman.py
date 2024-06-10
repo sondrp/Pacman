@@ -1,5 +1,4 @@
 import re
-from typing import Dict, Set
 from random import shuffle
 
 # The game itself. For now, make it simple by being turn based.
@@ -7,65 +6,66 @@ from random import shuffle
 
 BOARD = re.sub(r"\s", "", """
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx/
-xPfffffffffffxxffffffffffffx/
+xpfffffffffffxxfffffffffcffx/
 xfxxxxfxxxxxfxxfxxxxxfxxxxfx/
 xfxxxxfxxxxxfxxfxxxxxfxxxxfx/
 xfxxxxfxxxxxfxxfxxxxxfxxxxfx/
-xffffffffffffffffffffffffffx/
+xfffiffffpfffffffffffffffffx/
 xfxxxxfxxfxxxxxxxxfxxfxxxxfx/
 xfxxxxfxxfxxxxxxxxfxxfxxxxfx/
-xffffffxxffffxxffffxxffbpicx/
+xffffffxxffffxxffffxxffbfffx/
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx/
 """)
 
-actions: Dict[str, Set[str]] = {
-    'E': (r"[^x]", r" "),
-    'S': (r"(.{28})[^x]", r" \1"),
-    'W': (r"[^x]", r" "),
-    'N': (r"[^x](.{28})", r"\1 "),
-}
-
-def make_pattern(piece: str, direction: str):
-    if direction not in actions.keys(): return None, None
-
-    forward = direction == "E" or direction == "S"
-    pattern, repl = actions.get(direction)
-
-    if forward:
-        return fr"{piece}{pattern}", fr"{repl}{piece}"
-    else:
-        return fr"{pattern}{piece}", fr"{piece}{repl}"
-
-
 class Pacman:
-    board = BOARD
+    row_step = BOARD.find("/") + 1
+    def __init__(self, board=BOARD):
+        self.board=board
+        self.size = len(board)
+        
+        row_step = board.find("/") + 1
+        self.directions = [1, row_step, -1, -row_step]
 
-    def player_action(self, direction) -> bool:
-        pattern, repl = make_pattern("P", direction)
-        if not pattern:
-            return False
+    # Attempt to move the piece. Return false if not allowed. 
+    def make_move(self, index_from: int, index_to: int) -> bool:
+        if index_from < 0 or self.size <= index_from or 0 < index_to or self.size <= index_to: 
+            return False  
 
-        self.board = re.sub(pattern, repl, self.board)
-        self.ghost_action()
+        board = list(board)
+        piece = board[index_from]
+        food = board[index_to]
+        if not re.match(r"[pbnic][f ]", re.I): return False
 
+        board[index_from] = "f" if piece.isupper() else " "
+        board[index_to] = piece.upper() if food == "f" else piece.lower()
+
+        self.board = "".join(board)
         return True
 
-    # Make a random move for each of the ghosts
-    def ghost_action(self) -> bool:
+    # Currently: ghost just picks a random direction
+    def ghost_action(self, piece: str):
         board = self.board
-        ghosts = ["b", "p", "i", "c"]
-        directions = ["N", "E", "S", "W"]
+        piece_index = board.find(piece)
+        if piece_index == -1: return
+        directions = self.directions
         shuffle(directions)
-        shuffle(ghosts)
 
+        for direction in directions:
+            landing = piece_index + direction
+            if self.make_move(piece_index, landing):
+                return
 
-        for ghost in ghosts:
-            for direction in directions:
-                pattern, repl = make_pattern(ghost, direction)
-                if not re.search(pattern, board): continue
-                board = re.sub(pattern, repl, board)
-                break
+    def ghost_actions(self):
+        for ghost in "bnicBNIC":
+            self.ghost_action(ghost)
 
-        self.board = board
+    # Attempt to make a player move, and return true if successful
+    def player_action(self, direction) -> bool:
+        direction_index = "ESWN".find(direction)
+        if direction_index == -1: return False
 
+        player_index = self.board.find("p")
+        offset = self.directions[direction_index]
+
+        return self.make_move(player_index, player_index + offset)
 
