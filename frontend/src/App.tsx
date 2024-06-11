@@ -71,7 +71,7 @@ function Ghost({ color }: { color: string }) {
   );
 }
 
-function Pacman() {
+export function Pacman() {
   return (
     <div className="relative size-8 overflow-hidden rounded-full bg-yellow-400">
       <div className="absolute -right-2 top-2 size-4 rotate-45 bg-blue-800"></div>
