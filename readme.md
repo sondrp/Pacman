@@ -1,6 +1,30 @@
 
 Pacman - to learn some fundamental computational rationality techniques (AI).
-Things that can be implemented:
+
+## Running the project
+
+The backend is a simple websocket server that holds the game logic. Commands:
+
+- `cd backend`
+- `python database.py`
+
+-- Optional virtual environment --
+- `python -m venv virt` (virt or any name)
+- `source virt/bin/activate` (linux/macOS)
+-  `.\virt\Scripts\activate` (Windows)
+
+-- 
+
+- `pip install -r requirements.txt`
+- `uvicorn main:app --reload`
+
+
+Frontend shows the state of the pacman game. Commands:
+- `cd frontend`
+- `npm install`
+- `npm run dev`
+
+## Upcomming features
 
 #### Search:
  * DFS,
