@@ -3,7 +3,7 @@ from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 
 from queries import query_create_board
-from pacman import Pacman
+from pacman.pacman import Pacman
 
 app = FastAPI()
 
