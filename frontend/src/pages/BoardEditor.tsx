@@ -1,20 +1,12 @@
-import { cn } from "../utils/cn";
 import { useBoard } from "../hooks/useBoard";
 import { useTailwindSize } from "../hooks/useTailwindSize";
 import SaveBoard from "../components/boardeditor/SaveBoard";
 import ExportBoard from "../components/boardeditor/ExportBoard";
 import ImportBoard from "../components/boardeditor/ImportBoard";
 import Resizer from "../components/boardeditor/Resizer";
-import { useState } from "react";
+import { useState, MouseEvent } from "react";
 import TilePanel from "../components/boardeditor/TilePanel";
 import Square from "../components/Square";
-
-/* 
-  A working editor for making maps in pacman. 
-  There are still things that could be implemented:
-  1. Dragging placements, instead of placing tile by tile. 
-  2. Support for non-square board.
-*/
 
 export default function BoardEditor() {
   const { board, setBoard, resizers } = useBoard();
@@ -24,8 +16,6 @@ export default function BoardEditor() {
 
   const handleClick = (index: number) => {
     let newBoard = board;
-
-    console.log(/[pBbIiNnCc]/.test(selected));
 
     if (/[pBbIiNnCc]/.test(selected)) {
       // there can only be one pacman or ghost. Replace existing one before placing somewhere else
@@ -83,18 +73,33 @@ function Board(props: BoardProps) {
 
   const cols = board.indexOf("/") + 1;
 
+  const handleMouseEnter = (
+    e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
+    index: number,
+  ) => {
+    e.preventDefault();
+    if (e.buttons === 1) {
+      handleSquareClick(index);
+    }
+  };
+
   return (
     <div>
       {board.split("/").map((row, rowNo) => (
         <div key={rowNo} className="flex">
-          {row.split("").map((value, colNo) => (
-            <Square
-              handleClick={() => handleSquareClick(rowNo * cols + colNo)}
-              squareSize={squareSize}
-              key={rowNo + "" + colNo}
-              value={value}
-            />
-          ))}
+          {row.split("").map((value, colNo) => {
+            const index = rowNo * cols + colNo;
+            return (
+              <Square
+                onDragStart={(e) => e.preventDefault()}
+                onMouseEnter={(e) => handleMouseEnter(e, index)}
+                onClick={() => handleSquareClick(index)}
+                squareSize={squareSize}
+                key={rowNo + "" + colNo}
+                value={value}
+              />
+            );
+          })}
         </div>
       ))}
     </div>
