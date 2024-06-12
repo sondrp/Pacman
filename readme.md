@@ -6,7 +6,7 @@ Pacman - to learn some fundamental computational rationality techniques (AI).
 The backend is a simple websocket server that holds the game logic. Commands:
 
 - `cd backend`
-- `python database.py`
+- `python database.py` (only needed once)
 
 -- Optional virtual environment --
 - `python -m venv virt` (virt or any name)

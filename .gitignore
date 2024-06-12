@@ -1,4 +1,5 @@
 notes.md
 backend/virt/
 backend/__*
+backend/core/__*
 backend/pacman.db
