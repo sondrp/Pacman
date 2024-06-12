@@ -25,8 +25,9 @@ class Ghost:
             results.append(result)
         return results
     
-    # Swap the ghost and landing square (l and r). Do nothing with m.
+    # Swap the ghost and landing square (l and r). Do nothing with the symbols between them (m).
     # Note: the ghost could be either l or r, which is the reason for all the case checks.
+    # This automatically takes care of setting the vacant square case correctly.
     def replacer(self, match):
         l, m, r = match.groups()
         new_l = r.upper() * l.isupper() + r.lower() * l.islower() # new_l is the symbol of r, and case of l

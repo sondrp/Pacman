@@ -22,7 +22,7 @@ class Player:
         return [self.get_move(board, direction) for direction in "ESWN"]
 
 
-    # Player move by swaping player and landing square.
+    # Player move by swapping player and landing square.
     # The player can be either l or r, so lower both
     # to ensure that D -> d in the result. 
     def replacer(self, match):
