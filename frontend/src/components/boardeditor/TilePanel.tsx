@@ -5,7 +5,7 @@ type TilePanelProps = {
   selected: string;
   setSelected: (selected: string) => void;
 };
-const options = ["p", "x", "D", "d", "B", "b", "I", "i", "N", "n", "c", "C"];
+const options = ["p", "x", "D", "d", "B", "b", "I", "i", "N", "n", "c", "C", "G"];
 
 export default function TilePanel(props: TilePanelProps) {
   const { selected, setSelected } = props;
@@ -22,7 +22,7 @@ export default function TilePanel(props: TilePanelProps) {
           )}
         >
           <Square value={option} squareSize="size-20" />
-          {option.toUpperCase() === option && (
+          {/[DBNIC]/.test(option) && (
             <div className="absolute w-full text-center font-bold text-white">
               Dot
             </div>
