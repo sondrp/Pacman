@@ -2,8 +2,8 @@ from typing import List
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 
-from queries import query_create_board
-from pacman.pacman import Pacman
+from queries import query_create_board, query_get_boards
+from core.pacman import Pacman
 
 app = FastAPI()
 
@@ -19,12 +19,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/boards")
+def get_boards():
+    return {"boards": query_get_boards()}
 
 @app.post("/create")
 async def create_board(request: Request):
     data = await request.json() 
     board = data["board"]
-    query_create_board(board)
+    type = data["type"]
+    query_create_board(board, type)
 
 class ConnectionManager:
     active_connections: List[WebSocket] = []
