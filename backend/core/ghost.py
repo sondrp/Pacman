@@ -25,16 +25,11 @@ class Ghost:
             results.append(result)
         return results
     
-    # When moving a ghost, there are two things to take care of:
-    # 1. When the landing square contains a dot, the ghost must be uppercase.
-    # Lowercase if not.
-    # 2. If the moving ghost is uppercase, the vacant square must contain a dot (symbol: D).
-    # Else, the vacant square must be empty (symbol: d).
-    # The function takes in a match, capturing the moving ghost and the landing square (r and l). 
-    # It also captures some symbols in the middle (m) which we do not care about.
+    # Swap the ghost and landing square (l and r). Do nothing with m.
+    # Note: the ghost could be either l or r, which is the reason for all the case checks.
     def replacer(self, match):
         l, m, r = match.groups()
-        new_l = r.upper() * l.isupper() + r.lower() * l.islower() 
-        new_r = l.upper() * r.isupper() + l.lower() * r.islower()
+        new_l = r.upper() * l.isupper() + r.lower() * l.islower() # new_l is the symbol of r, and case of l
+        new_r = l.upper() * r.isupper() + l.lower() * r.islower() # new_r is the symbol of l, and case of r
         return new_l + m + new_r
         
