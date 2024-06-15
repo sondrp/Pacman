@@ -5,54 +5,34 @@ import BoardView from "../components/BoardView";
 
 const endpoint = "http://localhost:8000/boards";
 
-type BoardGroup = {
-  type: string;
-  boards: string[];
-};
+// TODO use the id as link instead.
+// the board comes from the websocket
 
-type QueryResponse = {
-  boards: string[][];
+type Board = {
+  id: string;
+  board: string;
+  type: string;
 };
 
 export default function HomePage() {
-  const { data: boardGroups, isSuccess } = useQuery({
+  const { data: boards, isSuccess } = useQuery({
     queryKey: ["boards"],
     queryFn: () =>
-      axios.get<QueryResponse>(endpoint).then((response) =>
-        response.data.boards.map(
-          (b) =>
-            ({
-              type: b[0],
-              boards: b[1].split(","),
-            }) as BoardGroup,
-        ),
-      ),
+      axios.get<Board[]>(endpoint).then((response) => response.data),
   });
 
   if (!isSuccess) return <div>Loading...</div>;
 
-  return (
-      <div className="flex flex-col gap-20 pt-20 grow">
-        {boardGroups.map((group) => (
-          <BoardGroupDisplay key={group.type} group={group} />
-        ))}
-      </div>
-  );
-}
+  console.log(boards);
 
-function BoardGroupDisplay({ group }: { group: BoardGroup }) {
   return (
-    <div className="border-t border-black pl-10">
-      <div className="text-xl uppercase">
-        {group.type}
-      </div>
-      <div className="flex gap-2">
-        {group.boards.map((board) => (
-          <Link key={board} to={`/board/${board.replace(/\//g, "-")}`}>
-            <BoardView board={board} />
-          </Link>
-        ))}
-      </div>
+    <div className="flex grow flex-col gap-20 p-20">
+      {boards.map((board) => (
+        <Link key={board.id} to={`/board/${board.id}`}>
+          <p>{board.type}</p>
+          <BoardView board={board.board} />
+        </Link>
+      ))}
     </div>
   );
 }
