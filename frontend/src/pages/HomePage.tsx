@@ -49,7 +49,7 @@ function BoardGroupDisplay({ group }: { group: BoardGroup }) {
       <div className="flex gap-2">
         {group.boards.map((board) => (
           <Link key={board} to={`/board/${board.replace(/\//g, "-")}`}>
-            <BoardView board={board} className="hover:border-none" />
+            <BoardView board={board} />
           </Link>
         ))}
       </div>
