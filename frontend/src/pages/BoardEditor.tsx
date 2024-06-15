@@ -4,9 +4,10 @@ import SaveBoard from "../components/boardeditor/SaveBoard";
 import ExportBoard from "../components/boardeditor/ExportBoard";
 import ImportBoard from "../components/boardeditor/ImportBoard";
 import Resizer from "../components/boardeditor/Resizer";
-import { useState } from "react";
+import { useState, MouseEvent } from "react";
 import TilePanel from "../components/boardeditor/TilePanel";
-import Board from "../components/boardeditor/BoardView";
+import Square from "../components/Square";
+import BoardView from "../components/BoardView";
 
 export default function BoardEditor() {
   const { board, setBoard, resizers } = useBoard();
@@ -30,8 +31,29 @@ export default function BoardEditor() {
     setBoard(newBoard);
   };
 
+  const handleMouseEnter = (e: any, index: number) => {
+    e.preventDefault();
+    if (e.buttons === 1) {
+      handleClick(index);
+    }
+  };
+
+  const squareRender = (value: string, index: number) => {
+    return (
+      <Square
+        className="cursor-pointer hover:border"
+        onDragStart={(e) => handleMouseEnter(e, index)}
+        onMouseEnter={(e) => handleMouseEnter(e, index)}
+        onClick={() => handleClick(index)}
+        squareSize={size}
+        key={index}
+        value={value}
+      />
+    );
+  };
+
   return (
-    <div className="relative grow flex min-w-max flex-col bg-blue-300 p-4">
+    <div className="relative flex min-w-max grow flex-col bg-blue-300 p-4">
       <SaveBoard board={board} />
       <ExportBoard board={board} />
       <ImportBoard setBoard={setBoard} />
@@ -50,12 +72,7 @@ export default function BoardEditor() {
             />
           </div>
           <Resizer increase={resizers.addRow} decrease={resizers.removeRow} />
-          {/* <BoardView board={board} squareSize={size} getClickIndex={handleClick} />  TODO: use this instead*/}
-          <Board
-            handleSquareClick={handleClick}
-            squareSize={size}
-            board={board}
-          />
+          <BoardView renderSquare={squareRender} board={board} />
         </div>
       </div>
       <TilePanel selected={selected} setSelected={setSelected} />
