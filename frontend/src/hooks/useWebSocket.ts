@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 
-export function useWebSocket() {
+export function useWebSocket(id: string) {
   const [ws, setWs] = useState<WebSocket | null>(null);
-  const [message, setMessage] = useState("");
+  const [board, setBoard] = useState("");
   const [fresh, setFresh] = useState(true);
 
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:8000/ws");
+    const socket = new WebSocket(`ws://localhost:8000/ws/${id}`);
 
     socket.onopen = () => setWs(socket);
-    socket.onmessage = (event) => setMessage(event.data);
+    socket.onmessage = (event) => setBoard(event.data);
     socket.onclose = () => setWs(null);
 
     return () => {
@@ -19,5 +19,5 @@ export function useWebSocket() {
 
   const refresh = () => setFresh(!fresh);
 
-  return { ws, message, refresh };
+  return { ws, board, refresh };
 }
