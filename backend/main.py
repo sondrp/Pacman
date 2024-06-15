@@ -2,7 +2,7 @@ from typing import List
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 
-from queries import query_create_board, query_get_boards
+from queries import query_create_board, query_delete_board, query_get_board, query_get_boards
 from core.pacman import Pacman
 
 app = FastAPI()
@@ -21,7 +21,15 @@ app.add_middleware(
 
 @app.get("/boards")
 def get_boards():
-    return {"boards": query_get_boards()}
+    return query_get_boards()
+
+@app.get("/board/{id}")
+def get_board(id: int):
+    return query_get_board(id)
+
+""" @app.delete("/delete/{id}")
+def get_board(id: int):
+    return query_delete_board(id) """
 
 @app.post("/create")
 async def create_board(request: Request):
@@ -45,7 +53,7 @@ class ConnectionManager:
 
     async def player_action(self, direction):
         if self.pacman.player_action(direction):
-            self.pacman.random_all_ghosts()
+            self.pacman.move_ghosts_random()
             await self.broadcast()
 
     async def broadcast(self):
@@ -54,8 +62,12 @@ class ConnectionManager:
 
 manager = ConnectionManager()
 
-@app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
+@app.websocket("/ws/{id}")
+async def websocket_endpoint(websocket: WebSocket, id: str):
+
+    board = get_board(id)
+    manager.pacman = Pacman(board["board"])
+
     await manager.connect(websocket)
     try:
         while True:
