@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const BOARD = "xxxxxxxxxxxxxxxxxxxxxxxxxx/xffBINCffxxxxxxxxxxxxxxxxx/xffffffffxxxxxxxxxxxxxxxxx/xxxxxxxxxxxxxxxxxxxxxxxxxx/xxxxxxxxxxxxxxxxxxxxxxxxxx/xxxxxxxxxxxxxxxxxxxxxxxxxx/xxxxxxxxxxxxxxxxxxxxxxxxxx/xxxxxxxxxxxxxxxxxxxxxxxxxx/xxxxxxxxxxxxxxxxxxxxxxxxxx/xxxxxxxxxxxxxxxxxxxxxxxxxx/";
+const BOARD = "xxxxxxxxxxxxxxxxxxxxxxxxxx/xDDBINCDDxxxxxxxxxxxxxxxxx/xDDDDDDDDxxxxxxxxxxxxxxxxx/xxxxxxxxxxxxxxxxxxxxxxxxxx/xxxxxxxxxxxxxxxxxxxxxxxxxx/xxxxxxxxxxxxxxxxxxxxxxxxxx/xxxxxxxxxxxxxxxxxxxxxxxxxx/xxxxxxxxxxxxxxxxxxxxxxxxxx/xxxxxxxxxxxxxxxxxxxxxxxxxx/xxxxxxxxxxxxxxxxxxxxxxxxxx/";
 
 type BoardResizers = {
   addRow: () => void,

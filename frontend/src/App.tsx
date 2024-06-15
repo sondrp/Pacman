@@ -2,7 +2,7 @@ import { Link, Outlet } from "react-router-dom";
 
 function App() {
   return (
-    <div className="h-screen bg-blue-300 flex flex-col">
+    <div className="min-h-screen bg-blue-300 flex flex-col">
       <Navbar />
       <Outlet />
     </div>

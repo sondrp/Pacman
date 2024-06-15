@@ -4,7 +4,7 @@ import SaveBoard from "../components/boardeditor/SaveBoard";
 import ExportBoard from "../components/boardeditor/ExportBoard";
 import ImportBoard from "../components/boardeditor/ImportBoard";
 import Resizer from "../components/boardeditor/Resizer";
-import { useState, MouseEvent } from "react";
+import { useState } from "react";
 import TilePanel from "../components/boardeditor/TilePanel";
 import Square from "../components/Square";
 import BoardView from "../components/BoardView";
