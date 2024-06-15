@@ -28,7 +28,7 @@ export default function Square(props: SquareProps) {
     <div
       {...divprops}
       className={cn(
-        "flex items-center justify-center bg-blue-800 hover:border",
+        "flex items-center justify-center bg-blue-800",
         size,
         value === "x" && "bg-black",
         className,
