@@ -1,35 +1,28 @@
-import Square, { SquareProps } from "./Square";
-import { MouseEvent } from "react";
+import {ReactNode } from "react";
+import Square from "./Square";
 
 type BoardViewProps = {
-  getClickIndex?: (index: number) => void,
+  renderSquare?: (value: string, index: number) => ReactNode;
   board: string;
-} & Omit<SquareProps, "value">;
+};
 
 export default function BoardView(props: BoardViewProps) {
-  const { board, onClick, getClickIndex, ...squareprops } = props;
+  const { board, renderSquare: _renderSquare } = props;
 
-  const handleClick = (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>, index: number) => {
-    if (!!onClick) {
-      onClick(e)
-    }
-    if (!!getClickIndex) {
-      getClickIndex(index)
-    }
-  }
+  // use default function for square render if none is provided. This is terrible code but oh well
+  const renderSquare = !_renderSquare ? 
+  (value: string, index: number) => <Square key={index} value={value} /> :
+  _renderSquare
 
-  const cols = board.indexOf("/") + 1
-
+  const cols = board.indexOf("/") + 1;
 
   return (
     <div>
       {board.split("/").map((row, rowNo) => (
         <div key={rowNo} className="flex">
-          {row.split("").map((value, colNo) => {
-            const index = rowNo * cols + colNo
-            return (
-            <Square onClick={e => handleClick(e, index)} {...squareprops} key={index} value={value} />
-          )})}
+          {row
+            .split("")
+            .map((value, colNo) => renderSquare(value, cols * rowNo + colNo))}
         </div>
       ))}
     </div>
