@@ -1,8 +1,7 @@
 import re
-import random
-
+from core.agents.naive_pacman import NaivePacman
+from core.agents.simple_reflex_random import RandomGhost
 from core.player import Player
-from core.ghost import Ghost
 
 # Each ghost can be represented with two symbols (upper and lowercase letter), 
 # because it is important to track if the ghost is standing on a dot.
@@ -30,24 +29,15 @@ xDDDDDDxxDDDDxxDDDDxxDDBDDDx/
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx/
 """)
 
+# Now: 
+# make it so that the pacman is the only active player, and make give him an ai.
 
-def player_replacer(match):
-    l, m, r = match.groups()
-    return r.lower() + m + l.lower()
-
-
-class Pacman:
+class Game:
     def __init__(self, board=BOARD):
         self.board=board  
 
-        self.player = Player(board)      
+        self.ai = NaivePacman(board)
 
-        self.ghosts = [
-            Ghost(board, "b"),    # Blinky 
-            Ghost(board, "i"),    # Inky
-            Ghost(board, "n"),    # Pinky
-            Ghost(board, "c"),    # Clyde
-        ]
 
     # Attempt to move the player
     # Return bool to show outcome
@@ -58,10 +48,8 @@ class Pacman:
         self.board = move
         return True
 
-    def move_ghosts_random(self):
-        for ghost in self.ghosts:
-            moves = ghost.get_legal_moves(self.board)
-            if not moves: continue
+    def move_ghosts(self):
+        self.board = self.ai.make_move(self.board)
+    
 
-            move = random.choice(moves)
-            self.board = move
+game = Game("xxxxxxxxx/xDDDDDDDx/xDxxxxxDx/xDxxxxxDx/xpDDDDDDx/xxxxxxxxx/")

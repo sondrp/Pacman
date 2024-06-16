@@ -1,5 +1,4 @@
-notes.md
+notes/*
+*pyc
 backend/virt/
-backend/__*
-backend/core/__*
 backend/pacman.db
